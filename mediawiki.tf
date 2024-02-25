@@ -20,15 +20,19 @@ resource "aws_instance" "mediawiki" {
     host        = self.public_ip
   }
 
-  provisioner "remote-exec" {
-     inline = [
-      "sudo apt update -y",
-      "sudo apt install -y software-properties-common",
-      "sudo add-apt-repository --yes --update ppa:ansible/ansible",
-      "sudo apt install -y ansible",
-      "mkdir -p /opt"
-        ]
-  }
+ provisioner "remote-exec" {
+  inline = [
+    "sudo apt update -y",
+    "sudo apt install -y software-properties-common",
+    "sudo add-apt-repository --yes --update ppa:ansible/ansible",
+    "sudo apt install -y ansible",
+    "mkdir -p /opt",
+    "cd /opt",
+    "sudo wget https://raw.githubusercontent.com/yuabhishek14/MediaWiki-Deployment-Automation/main/mediawiki_setup.yaml",
+    "sudo ansible-playbook -i hosts.ini mediawiki_setup.yaml"
+  ]
+}
+
 }
 
 resource "aws_security_group" "demo-sg" {
