@@ -38,4 +38,4 @@
     - name: Configure MediaWiki
       shell: "sudo su - -c 'ln -s /var/lib/mediawiki /var/www/html/mediawiki'"
     - name: Install Php extension
-      shell: "sudo apt install php-intl"
+      shell: "sudo apt install -y php-intl"
