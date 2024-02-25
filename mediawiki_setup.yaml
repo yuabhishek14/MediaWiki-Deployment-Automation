@@ -8,16 +8,7 @@
         upgrade: yes
 
     - name: Install required packages
-      apt:
-        name:
-          - apache2
-          - mysql-server
-          - php
-          - php-mysql
-          - libapache2-mod-php
-          - php-xml
-          - php-mbstring
-        state: present
+      shell: "sudo apt-get install apache2 mysql-server php php-mysql libapache2-mod-php php-xml php-mbstring"
 
     - name: Download MediaWiki tarball
       shell: "cd /tmp/ && wget https://releases.wikimedia.org/mediawiki/1.41/mediawiki-1.41.0.tar.gz"
@@ -37,3 +28,6 @@
             - "GRANT ALL ON my_wiki.* TO 'abhishek'@'localhost';"
             - "commit;"
             - "quit;"
+
+    - name: Configure MediaWiki
+      shell: "sudo ln -s /var/lib/mediawiki /var/www/html/mediawiki"        
