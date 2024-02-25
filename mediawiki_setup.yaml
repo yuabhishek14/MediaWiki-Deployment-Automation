@@ -1,0 +1,39 @@
+---
+- hosts: localhost  # You can replace "localhost" with your target host or group
+  become: yes
+  tasks:
+    - name: Update and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - apache2
+          - mysql-server
+          - php
+          - php-mysql
+          - libapache2-mod-php
+          - php-xml
+          - php-mbstring
+        state: present
+
+    - name: Download MediaWiki tarball
+      shell: "cd /tmp/ && wget https://releases.wikimedia.org/mediawiki/1.41/mediawiki-1.41.0.tar.gz"
+
+    - name: Extract MediaWiki tarball
+      shell: "tar -xvzf /tmp/mediawiki-*.tar.gz && sudo mkdir /var/lib/mediawiki && sudo mv mediawiki-*/* /var/lib/mediawiki"
+
+    - name: Create MySQL user and database
+      expect:
+        command: mysql -u root -p
+        responses:
+          Enter password: ""
+          mysql>:
+            - "CREATE USER 'abhishek'@'localhost' IDENTIFIED BY 'believe14';"
+            - "CREATE DATABASE my_wiki;"
+            - "USE my_wiki;"
+            - "GRANT ALL ON my_wiki.* TO 'abhishek'@'localhost';"
+            - "commit;"
+            - "quit;"
